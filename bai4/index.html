@@ -21,6 +21,8 @@
   <style>
     * {
       box-sizing: border-box;
+      padding: 0;
+      margin: 0;
     }
 
     html {
@@ -31,10 +33,11 @@
 </head>
 
 <body>
-  <div class="w-full bg-white">
-    <div class="max-w-[1600px] w-full mx-auto my-4">
+  <div class="w-screen min-h-screen bg-white grid place-items-center">
+    <div class="max-w-[1600px] w-full">
 
-      <div id="video-container" class="aspect-video relative rounded-2xl overflow-hidden group">
+      <div id="video-container"
+        class="aspect-video relative rounded-2xl overflow-hidden group shadow-2xl shadow-pink-500/40">
 
         <!-- <img class="size-full" src="assets/images/backg.jpg" alt=""> -->
 
@@ -42,11 +45,13 @@
           <source src="assets/videos/video-demo2.mp4" type="video/mp4">
         </video>
 
+        <div id="big-btn-play" onclick="toggleVideo()"
+          class="size-[96px] rounded-full bg-[#00000040] z-10 grid place-items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer">
+          <img src="assets/icons/play-btn.svg" alt="">
+        </div>
+
         <div id="video-controls" class="absolute top-0 left-0 w-full h-full bg-black/20 group-hover:block hidden">
-          <div onclick="toggleVideo()"
-            class="size-[96px] rounded-full bg-[#00000040] grid place-items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer">
-            <img id="big-btn-play" src="assets/icons/play-btn.svg" alt="">
-          </div>
+
 
           <div class="w-full absolute bottom-0 left-0 right-0 py-4 px-10">
 
@@ -94,6 +99,7 @@
   const videoContainerNode = document.querySelector('#video-container')
   const videoNode = document.querySelector('video')
   const bigPlayBtnNode = document.querySelector('#big-btn-play')
+  const bigPlayIconNode = document.querySelector('#big-btn-play img')
   const playBtnNode = document.querySelector('#btn-play')
   const durationVideo = document.querySelectorAll('#duration-video span')
   const controlAudio = document.querySelector('#control-audio')
@@ -122,7 +128,6 @@
       if (se < 10) se = '0' + se
       durationVideo[0].innerText = `${mi}:${se}`
       let timeUpdate = videoNode.currentTime * (100 / videoNode.duration)
-      console.log('timeUpdate :', timeUpdate)
       inputSlider.value = timeUpdate
     })
 
@@ -139,21 +144,20 @@
   const toggleVideo = () => {
     let setTimeoutId
     if (videoNode.paused) {
-      bigPlayBtnNode.src = 'assets/icons/pause-btn.svg'
       playBtnNode.src = 'assets/icons/pause-btn.svg'
-      bigPlayBtnNode.classList.add('size-11')
       videoNode.play()
-
+      bigPlayBtnNode.classList.remove('grid')
+      bigPlayBtnNode.classList.add('hidden')
       videoControls.classList.remove('hidden')
       setTimeoutId = setTimeout(() => {
         videoControls.classList.add('hidden')
       }, 5000)
     } else {
       clearTimeout(setTimeoutId)
-
-      bigPlayBtnNode.src = 'assets/icons/play-btn.svg'
+      videoControls.classList.add('block')
+      bigPlayBtnNode.classList.remove('hidden')
+      bigPlayBtnNode.classList.add('grid')
       playBtnNode.src = 'assets/icons/play-btn.svg'
-      bigPlayBtnNode.classList.remove('size-11')
       videoNode.pause()
     }
   }
@@ -163,7 +167,6 @@
   }
 
   const toggleAudio = () => {
-    console.log(1);
     if (videoNode.muted) {
       videoNode.muted = false
       videoNode.volume = 0.5
@@ -178,12 +181,18 @@
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
       prev15Seconds()
-    } 
+    }
     if (e.key === 'ArrowRight') {
       next15Seconds()
     }
     if (e.key === ' ') {
       toggleVideo()
+    }
+    if (e.key === 'm') {
+      toggleAudio()
+    }
+    if (e.key === 'f') {
+      handleFullScreen()
     }
   })
 
