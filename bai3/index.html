@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .box {
+      width: 600px;
+      height: 300px;
+      border: 2px palevioletred solid;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .block {
+      width: 60px;
+      height: 60px;
+      background-color: red;
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <div class="block"></div>
+  </div>
+</body>
+<script>
+  const blockNode = document.querySelector('.block')
+
+  const p = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      blockNode.style.top = '0'
+      blockNode.style.right = '0'
+      blockNode.style.left = 'unset'
+      blockNode.style.bottom = 'unset'
+      resolve()
+    }, 2000)
+  }).then(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        blockNode.style.top = 'unset'
+        blockNode.style.right = '0'
+        blockNode.style.left = 'unset'
+        blockNode.style.bottom = '0'
+        resolve()
+      }, 2000)
+    })
+  }).then(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        blockNode.style.top = 'unset'
+        blockNode.style.right = 'unset'
+        blockNode.style.left = '0'
+        blockNode.style.bottom = '0'
+        resolve()
+      }, 2000)
+    })
+  }).then(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        blockNode.style.top = '0'
+        blockNode.style.right = 'unset'
+        blockNode.style.left = '0'
+        blockNode.style.bottom = 'unset'
+      }, 2000)
+    })
+  })
+
+  p()
+
+</script>
+
+</html>
